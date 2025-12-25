@@ -27,8 +27,7 @@ development:
 test:
   <<: *default
   database: pos_api_test
+
+  
 production:
-  <<: *default
-  database: pos_api_production
-  username: pos_api
-  password: <%= ENV["POS_API_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
