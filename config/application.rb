@@ -24,6 +24,18 @@ module PosApi
     # Skip views, helpers and assets when generating a new resource.
 
 
+     # ===============================
+    # Timezone (ประเทศไทย)
+    # ===============================
+    config.time_zone = "Bangkok"
+
+    # ให้ DB เก็บเวลาเป็น UTC (มาตรฐาน)
+    config.active_record.default_timezone = :utc
+
+
+    
+
+
     # config.api_only = true
     config.api_only = false
 

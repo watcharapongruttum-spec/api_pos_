@@ -28,7 +28,33 @@ class User < ApplicationRecord
 
 
 
+  def self.conn
+    @conn ||= ActiveRecord::Base.connection
+  end
 
+
+
+
+
+  def self.all_sql(select_cols: %w(id username name role))
+    sql = "SELECT #{select_cols.map { |c| conn.quote_column_name(c) }.join(', ')} FROM users"
+    result = conn.exec_query(sql)
+
+    result.rows.map do |row|
+      row_hash = result.columns.zip(row).to_h
+      instantiate(row_hash)
+    end
+  end
+
+
+
+
+
+
+
+
+
+  
     def self.search(keyword)
         if keyword.present?
           where("username ILIKE ? OR name ILIKE ?", "%#{keyword}%", "%#{keyword}%")
@@ -39,13 +65,31 @@ class User < ApplicationRecord
 
 
 
-    # def self.role(role)
-    #     if role.present?
-    #       where("role ILIKE ?", "%#{role}%")
-    #     else
-    #       all
-    #     end
-    # end
+
+
+
+
+def self.search_sql(keyword)
+  keyword = keyword[:keyword] if keyword.is_a?(Hash)
+
+  conn = ActiveRecord::Base.connection
+  safe = ActiveRecord::Base.sanitize_sql_like(keyword.to_s)
+
+  result = conn.execute(%{
+    SELECT id, username, name, role
+    FROM users
+    WHERE username ILIKE '%#{safe}%'
+       OR name ILIKE '%#{safe}%'
+  }).to_a
+
+  result.map { |row| instantiate(row) }
+end
+
+
+
+
+
+
 
 
 

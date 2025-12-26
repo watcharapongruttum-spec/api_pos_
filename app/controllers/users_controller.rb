@@ -26,16 +26,23 @@ class UsersController < ApplicationController
 
 
   # GET /users/search?q=keyword
-  def search
-    keyword = params[:keyword]
-    if keyword.present?
-      @users = User.search(keyword)
-    else
-      @users = User.all
-    end
-    render json: User.respon_to_json_user(@users)
-  end
+  # def search
+  #   keyword = params[:keyword]
+  #   if keyword.present?
+  #     @users = User.search(keyword)
+  #   else
+  #     @users = User.all
+  #   end
+  #   render json: User.respon_to_json_user(@users)
+  # end
 
+
+
+  # GET /users/search?keyword=xxx
+def search
+  @users = User.search_sql(params[:keyword])
+  render json: User.respon_to_json_user(@users)
+end
 
 
 
@@ -47,9 +54,10 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
+    @users = User.all_sql
     render json: User.respon_to_json_user(@users)
   end
+
 
 
   
