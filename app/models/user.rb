@@ -69,21 +69,22 @@ class User < ApplicationRecord
 
 
 
-def self.search_sql(keyword)
-  keyword = keyword[:keyword] if keyword.is_a?(Hash)
+  def self.search_sql(params)
 
-  conn = ActiveRecord::Base.connection
-  safe = ActiveRecord::Base.sanitize_sql_like(keyword.to_s)
+    keyword = params[:keyword] if keyword.is_a?(Hash)
 
-  result = conn.execute(%{
-    SELECT id, username, name, role
-    FROM users
-    WHERE username ILIKE '%#{safe}%'
-       OR name ILIKE '%#{safe}%'
-  }).to_a
+    conn = ActiveRecord::Base.connection
+    safe = ActiveRecord::Base.sanitize_sql_like(keyword.to_s)
 
-  result.map { |row| instantiate(row) }
-end
+    result = conn.execute(%{
+      SELECT id, username, name, role
+      FROM users
+      WHERE username ILIKE '%#{safe}%'
+        OR name ILIKE '%#{safe}%'
+    }).to_a
+
+    result.map { |row| instantiate(row) }
+  end
 
 
 

@@ -12,11 +12,10 @@ class Payment
 
       total_summary = 0
       total_amount  = 0
-
-      items_data = []
+      items_data    = []
 
       cart.cart_items.each do |item|
-        unit_price = item.sku_master.price
+        unit_price  = item.sku_master.price
         total_price = unit_price * item.quantity
 
         ReceiptItem.create!(
@@ -49,12 +48,13 @@ class Payment
         total_amount: 0
       )
 
+
       {
         id: receipt.id,
         receipt_no: receipt.receipt_no,
         total_summary: receipt.total_summary,
         total_amount: receipt.total_amount,
-        created_at: receipt.created_at,
+        created_at: receipt.created_at.in_time_zone("Bangkok").iso8601,
         items: items_data
       }
     end

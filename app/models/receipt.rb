@@ -13,6 +13,10 @@ class Receipt < ApplicationRecord
     format("R%s-%04d", date_str, count_today)
   end
 
+
+
+
+
   def as_json_with_items
     {
       id: id,
@@ -31,6 +35,8 @@ class Receipt < ApplicationRecord
       end
     }
   end
+
+
 
 
   def self.generate_receipt_no
@@ -116,7 +122,16 @@ end
 
 
 
+  def as_json(options = {})
+    super(
+      only: [:id, :receipt_no, :total_summary, :total_amount],
+      methods: [:created_at_thai]
+    )
+  end
 
+  def created_at_thai
+    created_at.in_time_zone("Bangkok").iso8601
+  end
 
 
 
