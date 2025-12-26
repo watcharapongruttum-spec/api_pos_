@@ -7,4 +7,14 @@ class ReceiptItem < ApplicationRecord
     where(receipt_id: receipt_id)
   end
 
+
+  def as_json(options = {})
+    super(options).merge(
+      created_at: created_at.in_time_zone("Asia/Bangkok"),
+      updated_at: updated_at.in_time_zone("Asia/Bangkok")
+    )
+  end
+
+  
+
 end
