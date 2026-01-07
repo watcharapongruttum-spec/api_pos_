@@ -59,12 +59,15 @@ end
   # end
 
   def index
-    users = params[:keyword].present?
-              ? User.search(params[:keyword])
-              : User.list_basic
+    if params[:keyword].present?
+      users = User.search(params[:keyword])
+    else
+      users = User.list_basic
+    end
   
     render json: User.respond_to_json(users)
   end
+
 
 
 
