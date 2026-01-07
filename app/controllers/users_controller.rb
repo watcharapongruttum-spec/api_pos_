@@ -53,9 +53,17 @@ end
 
 
   # GET /users
+  # def index
+  #   @users = User.all_sql
+  #   render json: User.respon_to_json_user(@users)
+  # end
+
   def index
-    @users = User.all_sql
-    render json: User.respon_to_json_user(@users)
+    users = params[:keyword].present?
+              ? User.search(params[:keyword])
+              : User.list_basic
+  
+    render json: User.respond_to_json(users)
   end
 
 
