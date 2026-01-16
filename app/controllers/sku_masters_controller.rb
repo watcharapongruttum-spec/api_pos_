@@ -79,9 +79,25 @@ class SkuMastersController < ApplicationController
   end
 
   # DELETE /sku_masters/1
+  # def destroy
+  #   @sku_master.destroy
+  # end
+
   def destroy
-    @sku_master.destroy
+    if @sku_master.receipt_items.exists?
+      render json: {
+        error: {
+          code: "SKU_IN_USE",
+          message: "ไม่สามารถลบสินค้าได้ เนื่องจากถูกใช้งานในใบเสร็จแล้ว"
+        }
+      }, status: :unprocessable_entity
+    else
+      @sku_master.destroy
+      head :no_content
+    end
   end
+  
+  
 
   private
     # Use callbacks to share common setup or constraints between actions.
