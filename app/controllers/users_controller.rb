@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     else
       @users = User.all
     end 
-    render json: User.respon_to_json_user(@users)
+    render json: User.respon_to_json(@users)
   end
 
 
