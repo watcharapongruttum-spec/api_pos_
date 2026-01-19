@@ -5,7 +5,11 @@ class SkuMaster < ApplicationRecord
 
 
   
-
+  def as_json(options = {})
+    super(options).merge(
+      price: price.to_f
+    )
+  end
 
 
 
