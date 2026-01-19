@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   # GET /users/search?keyword=xxx
 def search
   @users = User.search_sql(params)
-  render json: User.respon_to_json_user(@users)
+  render json: User.respon_to_json(@users)
 end
 
 
