@@ -36,7 +36,7 @@ class User < ApplicationRecord
 
 
 
-  
+
   # =========================
   # QUERY (ActiveRecord ONLY)
   # =========================
@@ -63,7 +63,8 @@ class User < ApplicationRecord
   # ❌ ห้าม cache connection
   # ❌ ห้าม close connection เอง
   def self.search_sql(keyword)
-    safe = sanitize_sql_like(keyword.to_s)
+    keyword = Array(keyword).join(' ')
+    safe = sanitize_sql_like(keyword)
 
     ActiveRecord::Base.connection_pool.with_connection do |conn|
       result = conn.exec_query(
@@ -71,10 +72,16 @@ class User < ApplicationRecord
           SELECT id, username, name, role
           FROM users
           WHERE username ILIKE $1
-             OR name ILIKE $1
+            OR name ILIKE $1
         SQL
         "UserSearch",
-        [[nil, "%#{safe}%"]]
+        [
+          ActiveRecord::Relation::QueryAttribute.new(
+            "search",
+            "%#{safe}%",
+            ActiveRecord::Type::String.new
+          )
+        ]
       )
 
       result.rows.map do |row|
@@ -82,6 +89,7 @@ class User < ApplicationRecord
       end
     end
   end
+
 
   # =========================
   # PRIVATE

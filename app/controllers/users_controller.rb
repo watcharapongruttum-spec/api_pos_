@@ -40,8 +40,7 @@ class UsersController < ApplicationController
 
   # GET /users/search?keyword=xxx
   def search
-    keyword = params[:keyword].presence
-    @users = User.search_sql(keyword)
+    @users = User.search_sql(params[:keyword])
     render json: User.respond_to_json(@users)
   end
   
