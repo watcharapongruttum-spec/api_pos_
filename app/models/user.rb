@@ -1,23 +1,8 @@
 class User < ApplicationRecord
-  # =========================
-  # AUTH
-  # =========================
   has_secure_password
-
-  # =========================
-  # ASSOCIATIONS
-  # =========================
   has_one :cart, dependent: :destroy
   has_many :receipts, dependent: :destroy
-
-  # =========================
-  # CALLBACKS
-  # =========================
   after_create :create_cart_for_user
-
-  # =========================
-  # VALIDATIONS
-  # =========================
   validates :role,
             inclusion: { in: %w[admin user], message: "%{value} is not a valid role" }
 
@@ -29,6 +14,9 @@ class User < ApplicationRecord
             presence: true,
             length: { minimum: 6 },
             on: :create
+
+
+
 
   # =========================
   # SERIALIZER
@@ -44,6 +32,11 @@ class User < ApplicationRecord
     end
   end
 
+
+
+
+
+  
   # =========================
   # QUERY (ActiveRecord ONLY)
   # =========================
