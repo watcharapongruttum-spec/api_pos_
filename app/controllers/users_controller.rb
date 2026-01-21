@@ -39,11 +39,27 @@ class UsersController < ApplicationController
 
 
   # GET /users/search?keyword=xxx
-  def search
-    @users = User.search_sql(params[:keyword])
-    render json: User.respond_to_json(@users)
-  end
+  # def search
+  #   @users = User.search_sql(params[:keyword])
+  #   render json: User.respond_to_json(@users)
+  # end
   
+  def search
+    result = User.search_with_pagination(params)
+  
+    render json: {
+      data: result[:users].map { |u|
+        {
+          id: u.id,
+          username: u.username,
+          name: u.name,
+          role: u.role
+        }
+      },
+      recordsTotal: result[:total],
+      recordsFiltered: result[:total]
+    }
+  end
   
 
 
